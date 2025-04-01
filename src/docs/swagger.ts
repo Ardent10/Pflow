@@ -1,6 +1,6 @@
 import swaggerJsdoc from "swagger-jsdoc";
-import dotenv from "dotenv"
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 
 const swaggerOptions = {
   definition: {
@@ -8,9 +8,14 @@ const swaggerOptions = {
     info: {
       title: "Policy Management API",
       version: "1.0.0",
-      description: "API documentation for policy management system for SOC2 Compliance.",
+      description:
+        "API documentation for policy management system for SOC2 Compliance.",
     },
     servers: [
+      {
+        url: "/",
+        description: "Production server",
+      },
       {
         url: `http://localhost:${process.env.PORT}`,
         description: "Development server",

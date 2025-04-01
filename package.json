@@ -2,6 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "prisma": {
+    "engines": {
+      "node": "libquery_engine-linux-arm64-openssl-1.1.x"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "postinstall": "prisma generate",
