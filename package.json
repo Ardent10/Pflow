@@ -8,8 +8,7 @@
     "start": "node dist/index.js",
     "watch": "tsc -b --watch",
     "dev": "nodemon --exec ts-node src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "echo vercel build"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
