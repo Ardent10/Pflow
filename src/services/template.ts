@@ -1,26 +1,26 @@
-import { User } from "@prisma/client";
 import prisma from "../config/db";
 import { PolicyInput, PolicyTemplateInput } from "../types";
 import { BadRequestError } from "../middleware/errorHandler";
 import * as policyService from "./policy";
 
 export const createTemplateAndPolicies = async (
-  user: User,
+  userId: number,
+  companyId: number,
   data?: PolicyTemplateInput
 ) => {
   try {
     return await prisma.$transaction(
       async (prisma) => {
-        if (!user.company_id) {
+        if (!companyId) {
           throw new Error("Company ID is missing or invalid.");
         }
 
         const companyExists = await prisma.company.findUnique({
-          where: { id: user.company_id },
+          where: { id: companyId },
         });
 
         if (!companyExists) {
-          throw new Error(`Company with ID ${user.company_id} does not exist.`);
+          throw new Error(`Company with ID ${companyId} does not exist.`);
         }
 
         // Default SOC2 Compliance template data
@@ -30,8 +30,8 @@ export const createTemplateAndPolicies = async (
           version: 0,
           default_content: "SOC2 Compliance Template",
           is_active: false,
-          created_by: user.id.toString(),
-          company_id: user.company_id,
+          created_by: userId.toString(),
+          company_id: companyId,
         };
 
         const templateData = {
@@ -41,8 +41,8 @@ export const createTemplateAndPolicies = async (
           default_content:
             data?.default_content ?? defaultTemplateData.default_content,
           is_active: false,
-          created_by: data?.created_by ?? user.id.toString(),
-          company_id: user.company_id,
+          created_by: data?.created_by ?? userId.toString(),
+          company_id: companyId,
         };
 
         // Create the template in policyTemplate table
@@ -54,7 +54,7 @@ export const createTemplateAndPolicies = async (
         // Prepare policies to be created (both for default and custom)
         const policiesToCreate = data?.policies ?? [
           {
-            company_id: user.company_id,
+            company_id: companyId,
             template_id: template.id,
             name: "Access Control Policy",
             type: "Security",
@@ -64,7 +64,7 @@ export const createTemplateAndPolicies = async (
             policyRoles: ["sales", "engineering", "hr"],
           },
           {
-            company_id: user.company_id,
+            company_id: companyId,
             template_id: template.id,
             name: "Data Retention Policy",
             type: "Data",
@@ -74,7 +74,7 @@ export const createTemplateAndPolicies = async (
             policyRoles: ["sales", "engineering", "hr"],
           },
           {
-            company_id: user.company_id,
+            company_id: companyId,
             template_id: template.id,
             name: "Incident Response Policy",
             type: "Incident",
@@ -84,7 +84,7 @@ export const createTemplateAndPolicies = async (
             policyRoles: ["engineering"],
           },
           {
-            company_id: user.company_id,
+            company_id: companyId,
             template_id: template.id,
             name: "Change Management Policy",
             type: "Governance",
@@ -95,7 +95,7 @@ export const createTemplateAndPolicies = async (
             policyRoles: ["sales", "hr"],
           },
           {
-            company_id: user.company_id,
+            company_id: companyId,
             template_id: template.id,
             name: "Business Continuity Plan",
             type: "Continuity",
@@ -196,14 +196,17 @@ export const deleteTemplate = async (id: number) => {
   }
 };
 
-export const getPendingApprovalTemplates = async (user: User) => {
+export const getPendingApprovalTemplates = async (
+  userId: number,
+  companyId: number
+) => {
   try {
-    if (!user) {
+    if (!userId) {
       throw new Error("Unauthorized.");
     }
 
     const userWithRole = await prisma.user.findUnique({
-      where: { id: user.id },
+      where: { id: userId },
       include: { role: true },
     });
 
@@ -216,7 +219,7 @@ export const getPendingApprovalTemplates = async (user: User) => {
     const pendingTemplates = await prisma.policyTemplate.findMany({
       where: {
         is_active: false,
-        company_id: user.company_id,
+        company_id: companyId,
       },
       include: {
         policies: {
@@ -246,16 +249,16 @@ export const getPendingApprovalTemplates = async (user: User) => {
   }
 };
 export const approveTemplateAndPolicies = async (
-  user: User,
+  userId: number,
   templateId: number
 ) => {
   try {
-    if (!user) {
+    if (!userId) {
       throw new BadRequestError("Unauthorized.");
     }
 
     const userWithRole = await prisma.user.findUnique({
-      where: { id: user.id },
+      where: { id: userId },
       include: {
         role: true,
       },
@@ -295,7 +298,7 @@ export const approveTemplateAndPolicies = async (
     for (const policy of template.policies) {
       await policyService.approvePolicy(
         policy.id,
-        user.id.toString(),
+        userId.toString(),
         "accepted"
       );
     }

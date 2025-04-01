@@ -12,7 +12,8 @@ export const createTemplate = async (req: Request, res: Response) => {
 
     const data: PolicyTemplateInput = req.body || {};
     const template = await templateService.createTemplateAndPolicies(
-      user,
+      user.id,
+      user.company_id,
       data
     );
 
@@ -89,8 +90,12 @@ export const approveTemplateAndPolicies = async (
     const templateId = parseInt(req.params.id);
     const user = req.user;
 
+    if (!user) {
+      throw new BadRequestError("Uauthorized");
+    }
+
     const result = await templateService.approveTemplateAndPolicies(
-      user!,
+      user.id,
       templateId
     );
     res.status(200).json(result);
@@ -109,7 +114,10 @@ export const getPendingApprovalTemplates = async (
       throw new Error("Unauthorized.");
     }
 
-    const result = await templateService.getPendingApprovalTemplates(user);
+    const result = await templateService.getPendingApprovalTemplates(
+      user.id,
+      user.company_id
+    );
     res.status(200).json(result);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
