@@ -2,6 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
+  "prisma": {
+     "engines": {
+       "node": "libquery_engine-linux-arm64-openssl-1.1.x"
+     }
+   },
   "scripts": {
     "build": "tsc",
     "postinstall": "prisma generate",
@@ -9,7 +14,7 @@
     "watch": "tsc -b --watch",
     "dev": "nodemon --exec ts-node src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "prisma generate && pnpm run build"
+    "vercel-build": "prisma generate && prisma migrate deploy && pnpm run build"
   },
   "keywords": [],
   "author": "",
