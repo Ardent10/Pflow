@@ -9,7 +9,7 @@
     "watch": "tsc -b --watch",
     "dev": "nodemon --exec ts-node src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "vercel-build": "echo vercel building"
+    "vercel-build": "prisma generate && tsc"
   },
   "keywords": [],
   "author": "",
