@@ -3,7 +3,15 @@ import dotenv from "dotenv";
 import path from "path";
 
 dotenv.config();
+const isProd = process.env.NODE_ENV === "production";
 
+const apiPaths = isProd
+  ? [path.join(__dirname, "./routes/*.js"), path.join(__dirname, "../routes/*.js")]
+  : [
+      path.join(__dirname, "../src/docs/routes/*.ts"),
+      path.join(__dirname, "./routes/*.ts"),
+    ];
+console.log(__dirname);
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -37,7 +45,7 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: [path.join(__dirname, "./routes/*.js"),"./src/docs/routes/*.ts", ],
+  apis: apiPaths,
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
