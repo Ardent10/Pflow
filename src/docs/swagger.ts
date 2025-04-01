@@ -6,8 +6,8 @@ dotenv.config();
 
 const apiPaths =
   process.env.NODE_ENV === "production"
-    ? ["dist/docs/routes/*.js"]
-    : ["src/docs/routes/*.ts"];
+    ? [`${__dirname}/docs/routes/*.js`]
+    : ["./src/docs/routes/*.ts"];
 
 const swaggerOptions = {
   definition: {
