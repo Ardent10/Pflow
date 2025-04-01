@@ -6,7 +6,7 @@ dotenv.config();
 
 const apiPaths =
   process.env.NODE_ENV === "production"
-    ? [path.join(__dirname, "../routes/*.js"), '"/**/*.js"']
+    ? [path.join(__dirname, "/routes/*.js")]
     : ["./src/docs/routes/*.ts"];
 
 const swaggerOptions = {
@@ -23,7 +23,7 @@ const swaggerOptions = {
         description: "Development server",
       },
       {
-        url: "https://pflow-xi.vercel.app",
+        url: "https://pflow-ecru.vercel.app",
         description: "Production server",
       },
     ],
