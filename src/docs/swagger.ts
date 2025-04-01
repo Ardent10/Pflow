@@ -38,8 +38,8 @@ const swaggerOptions = {
     ],
   },
   apis: [
-    "./src/docs/routes/*.ts", 
-    "./dist/docs/routes/*.js",
+    path.join(__dirname, "../routes/*.js"),
+    path.join(__dirname, "routes/*.js"),
   ],
 };
 console.log(
