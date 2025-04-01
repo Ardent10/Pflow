@@ -1,9 +1,20 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../prisma/generated/client";
 import logger from "../utils/logger";
 
-const prisma = new PrismaClient({
-  log: ["info"],
-});
+let prisma: PrismaClient;
+
+if (process.env.NODE_ENV === "production") {
+  prisma = new PrismaClient({
+    log: ["info"],
+  });
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient({
+      log: ["info"],
+    });
+  }
+  prisma = global.prisma;
+}
 
 export async function connectToDatabase() {
   try {
