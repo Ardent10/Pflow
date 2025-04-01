@@ -1,5 +1,7 @@
 import swaggerJsdoc from "swagger-jsdoc";
 import dotenv from "dotenv";
+import path from "path";
+
 dotenv.config();
 
 const swaggerOptions = {
@@ -35,7 +37,10 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: [`${__dirname}/routes/*.ts`,`${__dirname}/routes/*.js`],
+  apis: [
+    path.join(__dirname, "./routes/*.ts"),
+    path.join(__dirname, "./routes/*.js"),
+  ],
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
