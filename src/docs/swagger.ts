@@ -39,9 +39,6 @@ const swaggerOptions = {
   },
   apis: ["./src/docs/routes/*.ts", "./routes/*.js"],
 };
-console.log(
-  path.join(__dirname, "./routes/*.ts"),
-  path.join(__dirname, "./routes/*.js")
-);
+
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 export default swaggerDocs;
