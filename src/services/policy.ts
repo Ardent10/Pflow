@@ -72,7 +72,6 @@ export const getPoliciesByCompany = async (
         ...(activeOnly ? { is_active: true } : {}),
       },
       include: {
-        configurations: true,
         acknowledgements: true,
       },
     });
@@ -87,7 +86,6 @@ export const getPolicyById = async (id: number) => {
     const policy = await prisma.policy.findUnique({
       where: { id },
       include: {
-        configurations: true,
         acknowledgements: true,
       },
     });

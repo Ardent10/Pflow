@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output = "./generated/client"
+  output   = "../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -46,7 +46,7 @@ model Role {
   id         Int      @id @default(autoincrement())
   company_id Int
   name       String
-  team         String
+  team       String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -101,7 +101,6 @@ model Policy {
   @@unique([company_id, name, type, version])
   @@map("policies")
 }
-
 
 model PolicyAcknowledgement {
   id                           Int       @id @default(autoincrement())
