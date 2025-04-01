@@ -95,7 +95,6 @@ model Policy {
 
   company              Company                 @relation(fields: [company_id], references: [id])
   template             PolicyTemplate?         @relation(fields: [template_id], references: [id])
-  configurations       PolicyConfiguration[]
   acknowledgements     PolicyAcknowledgement[]
   policy_role_mappings PolicyRoleMapping[]
 
@@ -103,20 +102,6 @@ model Policy {
   @@map("policies")
 }
 
-model PolicyConfiguration {
-  id                    Int      @id @default(autoincrement())
-  policy_id             Int
-  config_key            String
-  config_value          String
-  configuration_version Int      @default(1)
-  created_at            DateTime @default(now())
-  updated_at            DateTime @updatedAt
-
-  policy Policy @relation(fields: [policy_id], references: [id])
-
-  @@unique([policy_id, config_key])
-  @@map("policy_configurations")
-}
 
 model PolicyAcknowledgement {
   id                           Int       @id @default(autoincrement())

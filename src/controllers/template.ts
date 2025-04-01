@@ -105,8 +105,11 @@ export const getPendingApprovalTemplates = async (
 ) => {
   try {
     const user = req.user;
+    if (!user) {
+      throw new Error("Unauthorized.");
+    }
 
-    const result = await templateService.getPendingApprovalTemplates(user!);
+    const result = await templateService.getPendingApprovalTemplates(user);
     res.status(200).json(result);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
