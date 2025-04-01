@@ -8,13 +8,12 @@ const swaggerOptions = {
     info: {
       title: "Policy Management API",
       version: "1.0.0",
-      description:
-        "API documentation for policy management system for SOC2 Compliance.",
+      description: "API documentation for the policy management system.",
     },
     servers: [
       {
-        url: "/",
-        description: "Production server",
+        url: `http://localhost:${process.env.PORT}`,
+        description: "Development server",
       },
       {
         url: "https://pflow-xi.vercel.app",

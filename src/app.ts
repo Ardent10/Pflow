@@ -25,8 +25,6 @@ app.use("/api/v1/policies", policyRoutes);
 app.use("/api/v1/acknowledgements", acknowledgementRoutes);
 
 // Swagger documentation
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
 app.use(
   "/api-docs",
   swaggerUi.serve,
