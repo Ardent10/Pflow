@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id         Int      @id @default(autoincrement())
+  name       String
+  domain     String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  employees      User[]
+  policies       Policy[]
+  roles          Role[]
+  PolicyTemplate PolicyTemplate[]
+
+  @@map("companies")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  company_id   Int
+  name         String
+  email        String   @unique
+  password     String
+  role_id      Int
+  joining_date DateTime @default(now())
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  company          Company                 @relation(fields: [company_id], references: [id])
+  role             Role                    @relation(fields: [role_id], references: [id])
+  acknowledgements PolicyAcknowledgement[]
+
+  @@unique([company_id, email])
+  @@map("user")
+}
+
+model Role {
+  id         Int      @id @default(autoincrement())
+  company_id Int
+  name       String
+  team         String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  company              Company             @relation(fields: [company_id], references: [id])
+  employees            User[]
+  policy_role_mappings PolicyRoleMapping[]
+
+  @@unique([company_id, name])
+  @@map("roles")
+}
+
+model PolicyTemplate {
+  id              Int      @id @default(autoincrement())
+  company_id      Int
+  name            String
+  type            String
+  version         Int      @default(1)
+  default_content String
+  is_active       Boolean  @default(true)
+  created_by      String?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  policies Policy[]
+  company  Company  @relation(fields: [company_id], references: [id])
+
+  @@unique([company_id, name, type, version])
+  @@map("policy_templates")
+}
+
+model Policy {
+  id                  Int       @id @default(autoincrement())
+  company_id          Int
+  template_id         Int?
+  name                String
+  type                String
+  content             String
+  version             Int
+  is_active           Boolean   @default(false)
+  is_latest           Boolean   @default(false)
+  previous_version_id Int?
+  approved_by         String?
+  approval_date       DateTime?
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+
+  company              Company                 @relation(fields: [company_id], references: [id])
+  template             PolicyTemplate?         @relation(fields: [template_id], references: [id])
+  configurations       PolicyConfiguration[]
+  acknowledgements     PolicyAcknowledgement[]
+  policy_role_mappings PolicyRoleMapping[]
+
+  @@unique([company_id, name, type, version])
+  @@map("policies")
+}
+
+model PolicyConfiguration {
+  id                    Int      @id @default(autoincrement())
+  policy_id             Int
+  config_key            String
+  config_value          String
+  configuration_version Int      @default(1)
+  created_at            DateTime @default(now())
+  updated_at            DateTime @updatedAt
+
+  policy Policy @relation(fields: [policy_id], references: [id])
+
+  @@unique([policy_id, config_key])
+  @@map("policy_configurations")
+}
+
+model PolicyAcknowledgement {
+  id                           Int       @id @default(autoincrement())
+  user_id                      Int
+  policy_id                    Int
+  status                       String
+  version                      Int
+  acknowledgement_type         String // "new_hire", "periodic", "manual"
+  is_within_30_days            Boolean
+  is_escalated                 Boolean   @default(false)
+  acknowledgement_request_date DateTime  @default(now())
+  due_date                     DateTime
+  acknowledged_at              DateTime?
+  notes                        String?
+  triggered_by                 Int?
+
+  user   User   @relation(fields: [user_id], references: [id]) // Updated relation from employee to user
+  policy Policy @relation(fields: [policy_id], references: [id])
+
+  @@map("policy_acknowledgements")
+}
+
+model PolicyRoleMapping {
+  id         Int      @id @default(autoincrement())
+  policy_id  Int
+  name       String
+  created_at DateTime @default(now())
+
+  policy Policy @relation(fields: [policy_id], references: [id])
+  Role   Role?  @relation(fields: [roleId], references: [id])
+  roleId Int?
+
+  @@unique([policy_id, name])
+  @@map("policy_role_mappings")
+}
