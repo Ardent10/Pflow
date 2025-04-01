@@ -26,25 +26,24 @@ function logCurrentDirectory() {
 logCurrentDirectory();
 
 function findSwaggerPaths(): string[] {
-  const possiblePaths = [
-    path.join(__dirname, "docs", "routes", "*.js"),
-    path.join(__dirname, "..", "docs", "routes", "*.js"),
-    path.join(process.cwd(), "dist", "docs", "routes", "*.js"), // Vercel project root
-    path.join(process.cwd(), "docs", "routes", "*.js"), // Local build or development
-    path.join(process.cwd(), "src", "docs", "routes", "*.ts"), // Development (TypeScript)
+  const baseDir = process.cwd();
+  const possibleDirs = [
+    path.join(baseDir, "dist", "docs", "routes"), // Production build on Vercel
+    path.join(baseDir, "docs", "routes"), // Local or alternative setup
+    path.join(baseDir, "src", "docs", "routes"), // Dev environment with TypeScript
   ];
 
-  for (const apiPath of possiblePaths) {
-    const directory = path.dirname(apiPath);
-    console.log(`DIRECTORY: ${directory}`);
+  for (const dir of possibleDirs) {
+    console.log(`🔍 Checking directory: ${dir}`);
 
-    if (fs.existsSync(directory)) {
+    if (fs.existsSync(dir)) {
       const files = fs
-        .readdirSync(directory)
+        .readdirSync(dir)
         .filter((file) => file.endsWith(".js") || file.endsWith(".ts"));
       if (files.length > 0) {
-        console.log(`✅ Found Swagger routes at: ${apiPath}`);
-        return [apiPath];
+        const fullPath = path.join(dir, "*.js");
+        console.log(`✅ Found Swagger routes at: ${fullPath}`);
+        return [fullPath];
       }
     }
   }
