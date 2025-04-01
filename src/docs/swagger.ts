@@ -4,10 +4,10 @@ import path from "path";
 
 dotenv.config();
 
-const apiPaths = [
-  path.join(__dirname, "/routes/*.js"),
-  path.join(__dirname, "/routes/*.ts"),
-];
+const apiPaths =
+  process.env.NODE_ENV === "production"
+    ? [path.join(__dirname, "../routes/*.js")]
+    : ["./src/docs/routes/*.ts"];
 
 const swaggerOptions = {
   definition: {
