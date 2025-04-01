@@ -16,10 +16,6 @@ const swaggerOptions = {
         url: "/",
         description: "Production server",
       },
-      {
-        url: `http://localhost:${process.env.PORT}`,
-        description: "Development server",
-      },
     ],
     components: {
       securitySchemes: {
