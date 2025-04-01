@@ -9,6 +9,7 @@ import policyRoutes from "./routes/policy";
 import acknowledgementRoutes from "./routes/acknowledgement";
 import templateRoutes from "./routes/template";
 import authRoutes from "./routes/auth";
+import path from "path";
 
 const app = express();
 
@@ -24,7 +25,22 @@ app.use("/api/v1/policies", policyRoutes);
 app.use("/api/v1/acknowledgements", acknowledgementRoutes);
 
 // Swagger documentation
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocs, {
+    customCssUrl: "/swagger-ui/swagger-ui.css",
+    customJs: "/swagger-ui/swagger-ui-bundle.js",
+  })
+);
+
+// Serve Swagger UI static files
+app.use(
+  "/swagger-ui",
+  express.static(path.join(__dirname, "../node_modules/swagger-ui-dist"))
+);
 
 app.use(errorHandler);
 
