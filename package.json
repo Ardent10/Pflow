@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "npx prisma db push && npx prisma generate && tsc",
+    "build:dev": "tsc",
     "postinstall": "prisma generate",
     "start": "node dist/server.js",
     "watch": "tsc -b --watch",

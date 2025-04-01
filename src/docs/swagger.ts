@@ -1,12 +1,16 @@
 import swaggerJsdoc from "swagger-jsdoc";
 import dotenv from "dotenv";
-import path from "path";
 
 dotenv.config();
 
 const apiPaths =
   process.env.NODE_ENV === "production"
-    ? [`${__dirname}/docs/routes/*.js`]
+    ? [
+        `${__dirname}/docs/routes/auth.js`,
+        `${__dirname}/docs/routes/policy.js`,
+        `${__dirname}/docs/routes/template.js`,
+        `${__dirname}/docs/routes/acknowledgement.js`,
+      ]
     : ["./src/docs/routes/*.ts"];
 
 const swaggerOptions = {
