@@ -5,10 +5,30 @@ import fs from "fs";
 
 dotenv.config();
 
+function logCurrentDirectory() {
+  console.log("🚀 Current Working Directory:", process.cwd());
+
+  try {
+    const currentDir = process.cwd();
+    const items = fs.readdirSync(currentDir);
+    console.log("📂 Directory Contents:");
+    items.forEach((item) => {
+      const fullPath = path.join(currentDir, item);
+      const stats = fs.statSync(fullPath);
+      console.log(`- ${item} (${stats.isDirectory() ? "Folder" : "File"})`);
+    });
+  } catch (err) {
+    console.error("❌ Error reading directory:", err);
+  }
+}
+
+// Call the function to log the directory
+logCurrentDirectory();
+
 function findSwaggerPaths(): string[] {
   const possiblePaths = [
-    path.join(__dirname, "docs", "routes", "*.js"), 
-    path.join(__dirname, "..", "docs", "routes", "*.js"), 
+    path.join(__dirname, "docs", "routes", "*.js"),
+    path.join(__dirname, "..", "docs", "routes", "*.js"),
     path.join(process.cwd(), "dist", "docs", "routes", "*.js"), // Vercel project root
     path.join(process.cwd(), "docs", "routes", "*.js"), // Local build or development
     path.join(process.cwd(), "src", "docs", "routes", "*.ts"), // Development (TypeScript)
