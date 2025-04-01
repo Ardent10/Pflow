@@ -6,10 +6,10 @@ dotenv.config();
 const apiPaths =
   process.env.NODE_ENV === "production"
     ? [
-        `${__dirname}/docs/routes/auth.js`,
-        `${__dirname}/docs/routes/policy.js`,
-        `${__dirname}/docs/routes/template.js`,
-        `${__dirname}/docs/routes/acknowledgement.js`,
+        `${__dirname}/routes/auth.js`,
+        `${__dirname}/routes/policy.js`,
+        `${__dirname}/routes/template.js`,
+        `${__dirname}/routes/acknowledgement.js`,
       ]
     : ["./src/docs/routes/*.ts"];
 
