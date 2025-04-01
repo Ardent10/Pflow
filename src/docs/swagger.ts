@@ -16,6 +16,10 @@ const swaggerOptions = {
         url: "/",
         description: "Production server",
       },
+      {
+        url: "https://pflow-xi.vercel.app",
+        description: "Production server",
+      },
     ],
     components: {
       securitySchemes: {

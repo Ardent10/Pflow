@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 app.get("/", async (req, res) => {
   res.status(200).json({
-    message: "Server up and running on port" + PORT,
+    message: "Server up and running on port: " + PORT,
   });
 });
 
