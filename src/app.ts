@@ -24,6 +24,7 @@ app.use("/api/v1/templates", templateRoutes);
 app.use("/api/v1/policies", policyRoutes);
 app.use("/api/v1/acknowledgements", acknowledgementRoutes);
 
+console.log("SWAGGER DOCS=>", swaggerDocs);
 // Swagger documentation
 app.use(
   "/api-docs",
