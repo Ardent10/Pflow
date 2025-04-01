@@ -5,10 +5,11 @@ import path from "path";
 dotenv.config();
 
 const apiPaths = [
-  path.join(__dirname, "./routes/*.js"),
-  path.join(__dirname, "../routes/*.js"),
+  path.join(__dirname, "./routes/auth.js"),
+  path.join(__dirname, "./routes/policy.js"),
+  path.join(__dirname, "./routes/template.js"),
+  path.join(__dirname, "./routes/acknowledgement.js"),
   path.join(__dirname, "../src/docs/routes/*.ts"),
-  path.join(__dirname, "./routes/*.ts"),
 ];
 
 const swaggerOptions = {
